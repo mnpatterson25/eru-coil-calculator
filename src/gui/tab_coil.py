@@ -1,7 +1,7 @@
 # tab_coil.py
 
 from tkinter import ttk
-from tab_base import create_table
+from gui.tab_base import create_table
 
 def add_coil_tab(notebook, data, coil_data):
     if not coil_data:

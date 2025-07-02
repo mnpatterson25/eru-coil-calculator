@@ -1,10 +1,10 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from calculations import process_unit_data
-from results_display import show_results
-from coil_calculator import calculate_coil_options
-from coil_popup import show_coil_selection_popup
-from calculations import process_unit_data, enrich_control_panel_info
+from logic.calculations import process_unit_data
+from gui.results_display import show_results
+from logic.coil_calculator import calculate_coil_options
+from gui.coil_popup import show_coil_selection_popup
+from logic.calculations import process_unit_data, enrich_control_panel_info
 
 # Define columns shown on the input form
 columns = [

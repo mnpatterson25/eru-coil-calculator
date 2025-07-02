@@ -1,8 +1,8 @@
 # tab_electrical.py
 
 from tkinter import ttk
-from tab_base import create_table
-from part_definitions import FUSE_BLOCK_SIZES, CONTACTOR_SIZES, SCR_SIZES
+from gui.tab_base import create_table
+from logic.part_definitions import FUSE_BLOCK_SIZES, CONTACTOR_SIZES, SCR_SIZES
 
 def add_electrical_tab(notebook, data, coil_data):
     if not coil_data:

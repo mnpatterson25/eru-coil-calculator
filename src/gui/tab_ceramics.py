@@ -1,7 +1,7 @@
 # tab_ceramics.py
 
 from tkinter import ttk
-from tab_base import create_table
+from gui.tab_base import create_table
 
 def calculate_ceramic_parts(size, passes, coils):
     ceramic_multiplier = {

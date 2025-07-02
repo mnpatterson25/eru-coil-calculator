@@ -1,6 +1,6 @@
 # tab_control_panel.py
 from tkinter import ttk
-from tab_base import create_table
+from gui.tab_base import create_table
 
 def add_control_panel_tab(notebook, data):
     frame = ttk.Frame(notebook)
