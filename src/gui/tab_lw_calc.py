@@ -1,10 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+from logic.components import LINE_WIRE_CALCULATIONS
+from gui.tab_base import create_table
 
-# wire_calc_tab.py
 def create_wire_calc_tab(notebook, data):
-    from gui.tab_base import create_table
     frame = ttk.Frame(notebook)
     notebook.add(frame, text="Wire Size Calculations")
-    columns = ["Line Current (Amps)", "Addl. 0.5 Amp", "125% Current", "Breaker", "Ampacity", "Wire Gauge"]
-    create_table(frame, columns, data)
+    create_table(frame, LINE_WIRE_CALCULATIONS, data)

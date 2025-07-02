@@ -3,6 +3,12 @@
 from tkinter import ttk
 from gui.tab_base import create_table
 
+def safe_int(val):
+    try:
+        return int(val)
+    except (ValueError, TypeError):
+        return 0
+
 def add_ceramics_tab(notebook, data, coil_data):
     if not coil_data:
         return
@@ -11,25 +17,12 @@ def add_ceramics_tab(notebook, data, coil_data):
     notebook.add(ceramic_frame, text="Ceramics")
 
     ceramic_columns = ["Unit", "Passes", "Coils", "Ceramics"]
-
     display_data = []
 
     for idx, coil in enumerate(coil_data):
-        passes_raw = coil.get("Actual Passes", 0)
-        coils_raw = coil.get("Number of Coils", 0)
-
-        try:
-            passes = int(passes_raw)
-        except (ValueError, TypeError):
-            passes = 0
-
-        try:
-            coils = int(coils_raw)
-        except (ValueError, TypeError):
-            coils = 0
-
-        multiplier = 2  # Your original logic may have had this hardcoded
-        ceramics = passes * multiplier * coils
+        passes = safe_int(coil.get("Actual Passes"))
+        coils = safe_int(coil.get("Number of Coils"))
+        ceramics = passes * 2 * coils
 
         row = {
             "Unit": f"Unit {idx + 1}",

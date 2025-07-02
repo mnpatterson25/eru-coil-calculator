@@ -2,34 +2,26 @@
 
 import math
 import pandas as pd
+from logic.model_mappings import (
+    get_transformer_wire,
+    get_fuse_block_model,
+    get_contactor_model,
+    get_disconnect_model,
+    get_scr_model
+)
+from logic.constants import FUSE_SIZES, AMPACITY, CONTACTOR_SIZES, SCR_SIZE_RATINGS
 
-FUSE_SIZES = [
-    1, 2, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50,
-    60, 70, 80, 90, 100, 110, 125, 150, 175, 200,
-    225, 250, 300, 350, 400, 450, 500, 600, 800
-]
-
-AMPACITY = {
-    "18": 10,
-    "16": 13,
-    "14": 18,
-    "12": 25,
-    "10": 30,
-    "8": 55,
-    "6": 75,
-    "4": 95,
-    "3": 110
-}
-
-CONTACTOR_SIZES = [25, 40, 1000]
-
-SCR_SIZE_RATINGS = {
-    20: 25,   # 25A SCR has 80% rating of 20A
-    32: 40,   # 40A SCR → 32A
-    40: 50,   # 50A SCR → 40A
-    56: 70    # 70A SCR → 56A
-}
-
+def apply_default_unit_fields(unit):
+    unit.update({
+        "Line Wire Color": "",
+        "Line Wire Length (ft)": "",
+        "Control Wire Size (AWG)": "18",
+        "Control Wire Color": "",
+        "Control Wire Length (ft)": "",
+        "Control Wire Color2": "",
+        "Control Wire Length2 (ft)": "",
+    })
+        
 def get_contactor_amp(required_current):
     return next((size for size in CONTACTOR_SIZES if size >= required_current), "x")
 
@@ -77,19 +69,19 @@ def process_unit_data(units):
         unit.update({
             "Phase": phase,
             "Line Current (Amps)": line_current,
-            "Addl. .5 Amp": add_current,
+            "Addl. 0.5 Amp": add_current,
             "125% Current": current_125,
             "Wire Gauge": wire,
             "Ampacity": amp,
             "Breaker": breaker,
             "Line Wire Size (AWG)": lw_size,
-            "Line Wire Color": "",
-            "Line Wire Length (ft)": "",
-            "CW_Size (AWG)": "18",
-            "CW_Color": "",
-            "CW_Length (ft)": "",
-            "CW_Color2": "",
-            "CW_Length (ft) 2": "",
+            #"Line Wire Color": "",
+            #"Line Wire Length (ft)": "",
+            #"CW_Size (AWG)": "18",
+            #"CW_Color": "",
+            #"CW_Length (ft)": "",
+            #"CW_Color2": "",
+            #"CW_Length (ft) 2": "",
             "Disconnect Type": unit.get("Disconnect", "STD"),
             "Dip Switch": "3,5,6",
         })
@@ -126,31 +118,4 @@ def enrich_control_panel_info(data):
 
     return df.to_dict(orient="records")
 
-def get_transformer_wire(voltage):
-    try:
-        v = int(voltage)
-    except:
-        return "NO COLOR"
-    return {
-        480: "Grey",
-        277: "Yellow",
-        240: "Orange",
-        120: "Black",
-        208: "RED"
-    }.get(v, "NO COLOR")
 
-def get_fuse_block_model(f_per_unit, fb_amp):
-    if f_per_unit == 3:
-        return {30: "60308T", 60: "60608T"}.get(fb_amp, "x")
-    return {30: "LFT600301C-ND", 60: "VFT600601C"}.get(fb_amp, "y")
-
-def get_contactor_model(c_amps):
-    return {25: "DPE18B7", 40: "DPE32B7"}.get(c_amps, "x")
-
-def get_disconnect_model(disconnect_type, disconnect_amps):
-    if disconnect_type == "STD":
-        return {25: "466-273", 40: "466-277"}.get(disconnect_amps, "x")
-    return "KNIFE EDGE"
-
-def get_scr_model(scr_amps):
-    return "SN480D60ZW" if scr_amps > 40 else "SN480D40ZW"

@@ -1,19 +1,43 @@
 # components.py
 
 # --- Line Wire Data ---
-LINE_WIRE_FIELDS = [
-    "Line Wire Size (AWG)",
-    "Line Wire Color",
-    "Line Wire Length (ft)"
-]
-
 LINE_WIRE_CALCULATIONS = [
     "Line Current (Amps)",
     "Addl. 0.5 Amp",
     "125% Current",
     "Breaker",
     "Ampacity",
-    "Wire Gauge"
+    "Line Wire Size (AWG)"
+]
+
+# --- Line Wire Fields ---
+LINE_WIRE_FIELDS = [
+    "Line Wire Size (AWG)",
+    "Line Wire Color",
+    "Line Wire Length (ft)"
+]
+
+# --- Control Wire Fields ---
+CONTROL_WIRE_FIELDS = [
+    "Control Wire Size (AWG)",
+    "Control Wire Color",
+    "Control Wire Length (ft)",
+    "Control Wire Color2",
+    "Control Wire Length2 (ft)",
+]
+
+# --- Ceramic Info ---
+CERAMIC_INFO = [
+    "Unit",
+    "Passes",
+    "Coils",
+    "Ceramics",
+    "Line",
+    "Ceramics",
+    "Coil End Post",
+    "Ceramic Plug/Cap Sets",
+    "Passes",
+    "Number of Coils"
 ]
 
 # --- Electrical Info ---
@@ -34,31 +58,32 @@ ELECTRICAL_COMPONENTS = {
     "Ground Lug": "1"
 }
 
-# --- Control Wire Fields ---
-CONTROL_WIRE_FIELDS = [
-    "Size (AWG)",
-    "Color",
-    "Length (ft)",
-    "Color2",
-    "Length2 (ft)"
-]
-
 # --- Control Panel Info ---
 CONTROL_PANEL_INFO = [
     "Size",
     "Disconnect",
-    "Handing",
+    "Coil Handing",
     "Voltage",
-    "Type",
+    "Connection Type",
     "Passes",
+    "Line Wire Size (AWG)",   
+    "Fuse Block Amps",
+    "Fuse Amps",
+    "Fuses/Unit",
+    "Contactor Amps",
     "Disconnect Amps",
+    "SCR Amps",
     "Dip Switch",
     "Transformer Wire Used",
-    "Fuse Block Model",
+    "Fuse Block Model",    
     "Contactor Model",
     "Disconnect Model",
     "SCR Model"
 ]
+
+
+        
+
 
 # --- Coil Selection Info ---
 COIL_SELECTION_INFO = [
@@ -75,12 +100,7 @@ COIL_SELECTION_INFO = [
     "Heat Element Length (ft) per unit"
 ]
 
-# --- Ceramic Info ---
-CERAMIC_INFO = [
-    "Ceramics",
-    "Coil End Post",
-    "Ceramic Plug/Cap Sets"
-]
+
 
 # --- Basic Unit Info ---
 BASIC_UNIT_INFO = [
@@ -93,6 +113,30 @@ BASIC_UNIT_INFO = [
     "Voltage",
     "Phase"
 ]
+
+
+
+
+# --- Input Form Columns (Main Entry Form) ---
+INPUT_COLUMNS = [
+    "Line", "Tag #", "Size", "Material", "Coil Handing",
+    "Disconnect", "Transformer Voltage", "Voltage", "kW"
+]
+
+# --- Dropdown Options for Entry Fields ---
+DROPDOWN_OPTIONS = {
+    "Size": ["10x15", "10x21", "16x30"],
+    "Material": ["Galvanized"],
+    "Coil Handing": ["Left", "Right"],
+    "Transformer Voltage": ["a", "b", "c"],
+    "Voltage": ["480/3", "120/1"],
+    "Disconnect": ["STD", "KE"]
+}
+
+
+
+
+
 
 
 
@@ -110,3 +154,7 @@ coil_columns = [
     "Stretched Wound Coil Length (in)",
     "Heat Element Length (ft) per unit"
 ]
+
+
+
+
