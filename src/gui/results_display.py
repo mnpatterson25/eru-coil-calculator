@@ -1,9 +1,8 @@
 # results_display.py
 
 import tkinter as tk
-from tkinter import ttk, messagebox, simpledialog
+from tkinter import ttk, messagebox
 from gui.coil_popup import show_coil_selection_popup
-from logic.part_definitions import FUSE_BLOCK_SIZES, CONTACTOR_SIZES, SCR_SIZES
 from gui.tab_base import create_table
 from gui.tab_basic import create_basic_tab as add_basic_tab
 from gui.tab_lw_calc import create_wire_calc_tab as add_wire_calc_tab
@@ -14,10 +13,20 @@ from gui.tab_ceramics import add_ceramics_tab
 from gui.tab_electrical import add_electrical_tab
 from gui.tab_control_panel import add_control_panel_tab
 
+# Global state for refresh purposes
+input_frame_global = None
+processed_data_global = None
+coil_data_global = None
+
 result_container = None
 
 def show_results(data, input_frame, coil_data=None):
-    global result_container
+    global result_container, input_frame_global, processed_data_global, coil_data_global
+
+    input_frame_global = input_frame
+    processed_data_global = data
+    coil_data_global = coil_data
+
     if result_container:
         result_container.destroy()
 
@@ -35,3 +44,7 @@ def show_results(data, input_frame, coil_data=None):
     add_ceramics_tab(notebook, data, coil_data)
     add_electrical_tab(notebook, data, coil_data)
     add_control_panel_tab(notebook, data)
+
+def refresh_all_tabs():
+    if processed_data_global and input_frame_global:
+        show_results(processed_data_global, input_frame_global, coil_data_global)
