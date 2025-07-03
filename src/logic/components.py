@@ -92,45 +92,23 @@ CONTROL_PANEL_INFO = [
 ]
 
 
-        
-
-
-# --- Coil Selection Info ---
-COIL_SELECTION_INFO = [
-    "Connection Type",
-    "Resistance (ohm)",
-    "Line Current",
-    "Nichrome Wire Size (AWG)",
-    "Number of Coils",
-    "Passes",
-    "Pitch",
-    "Heat Element Length (in) per coil",
-    "Unstretch Wounded Length (in)",
-    "Stretched Wound Coil Length (in)",
-    "Heat Element Length (ft) per unit"
-]
-
-
-
-
-
 
 
 # --- Input Form Columns (Main Entry Form) ---
-INPUT_COLUMNS = [
-    "Line", "Tag #", "Size", "Material", "Coil Handing",
-    "Disconnect", "Transformer Voltage", "Voltage", "kW"
-]
+#INPUT_COLUMNS = [
+#    "Line", "Tag #", "Size", "Material", "Coil Handing",
+#    "Disconnect", "Transformer Voltage", "Voltage", "kW"
+#]
 
 # --- Dropdown Options for Entry Fields ---
-DROPDOWN_OPTIONS = {
-    "Size": ["10x15", "10x21", "16x30"],
-    "Material": ["Galvanized"],
-    "Coil Handing": ["Left", "Right"],
-    "Transformer Voltage": ["a", "b", "c"],
-    "Voltage": ["480/3", "120/1"],
-    "Disconnect": ["STD", "KE"]
-}
+#DROPDOWN_OPTIONS = {
+#    "Size": ["10x15", "10x21", "16x30"],
+#    "Material": ["Galvanized"],
+#    "Coil Handing": ["Left", "Right"],
+#    "Transformer Voltage": ["a", "b", "c"],
+#    "Voltage": ["480/3", "120/1"],
+#    "Disconnect": ["STD", "KE"]
+#}
 
 
 
@@ -140,38 +118,10 @@ DROPDOWN_OPTIONS = {
 
 
 
-coil_columns = [
-    "Connection Type",
-    "Resistance (ohm)",
-    "Line Current",
-    "Nichrome Wire Size (AWG)",
-    "Number of Coils",
-    "Passes",
-    "Pitch",
-    "Heat Element Length (in) per coil",
-    "Unstretch Wounded Length (in)",
-    "Stretched Wound Coil Length (in)",
-    "Heat Element Length (ft) per unit"
-]
+
 
 ##############################################################################
 ##############NEW STUFF#######################################################
-##############################################################################
-import math
-from logic.constants import FUSE_SIZES, AMPACITY, FB_SIZES, SCR_SIZE_RATINGS, CONTACTOR_SIZES, DISCONNECT_SIZES
-from logic.coil_calculator import connection_type, passes_actual, coils_qty
-from gui.tab_ceramics import ceramics
-#from logic.calculations import power_kw, voltage, phase
-
-
-
-
-##############################################################################
-##############################################################################
-##############################################################################
-
-
-
 ##############################################################################
 gauge_cw = 18
 color_lw = "XX"
@@ -181,11 +131,11 @@ length_lw = "XX"
 length_cw1 = "XX"
 length_cw2 = "XX"
 ##############################################################################
-passes_actual = passes_actual
-coils_qty = coils_qty
-ceramics = ceramics
-ceramics_posts = coils_qty * 2
-ceramics_caps = coils_qty * 2
+#passes_actual = passes_actual
+#coils_qty = coils_qty
+#ceramics = passes_actual * 2 * coils_qty
+#ceramics_posts = coils_qty * 2
+#ceramics_caps = coils_qty * 2
 ##############################################################################
 fb_unit = 1
 c_unit = 1
@@ -197,7 +147,7 @@ man_reset = 1
 auto_reset = 1
 ground_lug = 1
 ##############################################################################
-connection_type = connection_type.capitalize()
+#connection_type = connection_type.capitalize()
 ##############################################################################
 
 #dip_switch =

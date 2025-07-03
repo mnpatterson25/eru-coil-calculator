@@ -15,9 +15,9 @@ unit_sizes = {
     "16x30": (30, 16)
 }
 
-connection_type = ""
-passes_actual = 0
-coils_qty = 0
+#connection_type = ""
+#passes_actual = 0
+#coils_qty = 0
 
 def calculate_coil_options(voltage, power_kw, unit_size, passes_num, phase=3, connection_type="wye"):
     pitch_min = 0.16
@@ -74,6 +74,9 @@ def calculate_coil_options(voltage, power_kw, unit_size, passes_num, phase=3, co
         passes_actual = math.floor(passes_possible)
         coils_qty = phase  # Default to 1 unless split needed
         length_he_ft = (length_he_in / 12) * coils_qty 
+        ceramics = passes_actual * 2 * coils_qty
+        ceramics_posts = 2 * coils_qty
+        ceramics_caps = 2 * coils_qty
 
         # Append result in correct order
         results.append({
@@ -84,13 +87,16 @@ def calculate_coil_options(voltage, power_kw, unit_size, passes_num, phase=3, co
             "Resistance (ohm)": round(resistance, 4),
             "Line Current": current_line_calc,
             "Nichrome Wire Size (AWG)": gauge_nichrome,
-            "Number of Coils": coils_qty,
+            "Coils": coils_qty,            
             "Passes": passes_actual,
             "Pitch": pitch_rounded,
             "Heat Element Length (in) per coil": round(length_he_in, 2),
             "Unstretch Wounded Length (in)": round(length_he_in_unstretched, 2),
             "Stretched Wound Coil Length (in)": round(length_he_in_stretched, 2),
-            "Heat Element Length (ft) per unit": round(length_he_ft, 2)
+            "Heat Element Length (ft) per unit": round(length_he_ft, 2),
+            "Ceramics": ceramics,
+            "Coil End Post": ceramics_posts,
+            "Ceramic Plug/Cap Sets": ceramics_caps,
         })
 
     return results

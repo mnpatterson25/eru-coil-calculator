@@ -12,10 +12,20 @@ def add_coil_tab(notebook, data, coil_data):
     notebook.add(coil_frame, text="Selected Coils")
 
     coil_columns = [
-        "Connection Type", "Resistance (ohm)", "Line Current",
-        "Nichrome Wire Size (AWG)", "Number of Coils", "Passes", "Pitch",
-        "Heat Element Length (in) per coil", "Unstretch Wounded Length (in)",
-        "Stretched Wound Coil Length (in)", "Heat Element Length (ft) per unit"
+        "Connection Type",
+        "Resistance (ohm)",
+        "Line Current",
+        "Nichrome Wire Size (AWG)",
+        "Coils",
+        "Passes",
+        "Pitch",
+        "Heat Element Length (in) per coil",
+        "Unstretch Wounded Length (in)",
+        "Stretched Wound Coil Length (in)",
+        "Heat Element Length (ft) per unit",
+        "Ceramics",
+        "Coil End Post",
+        "Ceramic Plug/Cap Sets"
     ]
 
     headers = coil_columns + ["Change"]

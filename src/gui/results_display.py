@@ -40,7 +40,6 @@ def show_results(data, input_frame, coil_data=None):
     add_wire_calc_tab(notebook, data)
     add_detail_tab(notebook, data)
     add_control_tab(notebook, data)    
-    add_ceramics_tab(notebook, data, coil_data)
     add_electrical_tab(notebook, data, coil_data)
     add_control_panel_tab(notebook, data)
     add_coil_tab(notebook, data, coil_data)

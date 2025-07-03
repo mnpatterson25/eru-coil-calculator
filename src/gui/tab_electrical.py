@@ -2,7 +2,7 @@
 
 from tkinter import ttk
 from gui.tab_base import create_table
-from logic.part_definitions import FUSE_BLOCK_SIZES, CONTACTOR_SIZES, SCR_SIZES
+from logic.constants import FB_SIZES, CONTACTOR_SIZES, SCR_SIZE_RATINGS
 
 def add_electrical_tab(notebook, data, coil_data):
     if not coil_data:
@@ -30,13 +30,13 @@ def add_electrical_tab(notebook, data, coil_data):
             return next((x for x in values if x >= threshold), "x")
 
         panel_data.append({
-            "Fuse Block Amps": min_ge(FUSE_BLOCK_SIZES, breaker),
+            "Fuse Block Amps": min_ge(FB_SIZES, breaker),
             "Fuse Blocks/Unit": 1,
             "Fuse Amps": breaker,
             "Fuses/Unit": phase,
             "Contactor Amps": min_ge(CONTACTOR_SIZES, current_125),
             "Contactors/Unit": 1,
-            "SCR Amps": min_ge(SCR_SIZES, current_125),
+            "SCR Amps": min_ge(SCR_SIZE_RATINGS, current_125),
             "SCRs/Unit": 1,
             "Transformer VA": "50" if "24V,50VA" in transformer_info else "x",
             "Transformers/Unit": 1,

@@ -1,8 +1,8 @@
 import math
 from logic.constants import *
 #FUSE_SIZES, AMPACITY, CONTACTOR_SIZES, SCR_SIZE_RATINGS, DISCONNECT_SIZES, FB_SIZES
-from logic.coil_calculator import connection_type, passes_actual
-
+#from logic.coil_calculator import connection_type, passes_actual
+from logic.coil_calculator import *
 
 ##############################################################################
 ############################# AMPERAGE FUNCTIONS #############################
@@ -20,6 +20,7 @@ def min_ge(values, target):
     return next((v for v in values if v >= target), "N/A")
 
 from logic.components import *
+from logic.coil_calculator import calculate_coil_options
 
 line_no = 0
 
@@ -39,7 +40,9 @@ def process_unit_data(units):
         power_kw = unit["kW"]
         voltage = int(voltage_ph.split("/")[0]) if isinstance(voltage_ph, str) else int(voltage_ph)
         phase = int(unit.get("Phase", 3))
-        
+
+        #coil_data = calculate_coil_options(voltage, power_kw, unit_size, 3, phase, "wye")[:1]
+        #unit.update(coil_data[0] if coil_data else {})
 
         ### CALCULATIONS ###
         current_base = (power_kw * 1000) / (voltage * math.sqrt(3 if phase == 3 else 1))
@@ -74,6 +77,7 @@ def process_unit_data(units):
         dc_amps = next((size for size in DISCONNECT_SIZES if size >= current_125), "N/A")
         scr_amps = next((size for size in SCR_SIZE_RATINGS if size >= current_125), "N/A")
         unit["T_VA"] = "50" if str(unit.get("Transformer Voltage", "")).startswith("24V,50VA") else "x"
+        #ceramics = passes_actual * 2 * coils_qty
         result.append(unit)
 
         ### FIELD UPDATES ###
@@ -105,12 +109,12 @@ def process_unit_data(units):
             "Control Wire Color 2": color_cw2,
             "Control Wire Length 2 (ft)": length_cw2,
             # CERAMICS TAB
-            "Unit": line_no,
-            "Passes": passes_actual,
-            "Coils": coils_qty,
-            "Ceramics": ceramics,
-            "Coil End Post": ceramics_posts,
-            "Ceramic Plug/Cap Sets": ceramics_caps,
+            #"Unit": line_no,
+            #"Passes": passes_actual,
+            #"Coils": coils_qty,
+            #"Ceramics": ceramics,
+            #"Coil End Post": ceramics_posts,
+            #"Ceramic Plug/Cap Sets": ceramics_caps,
             # ELECRICAL INFO TAB
             "Fuse Block Amps": min_ge(FB_SIZES, breaker),
             "Fuse Blocks/Unit": fb_unit,
@@ -129,7 +133,7 @@ def process_unit_data(units):
             "Auto Reset": auto_reset,
             "Ground Lug": ground_lug,
             # CONTROL PANEL INFO TAB
-            "Connection Type": connection_type,
+            #"Connection Type": connection_type,
             #"Dip Switch": "3,5,6",
             #"Transformer Wire Used": ,
             #"Fuse Block Model": ,
