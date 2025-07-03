@@ -15,7 +15,11 @@ unit_sizes = {
     "16x30": (30, 16)
 }
 
-def calculate_coil_options(voltage, power_kw, unit_size, num_passes, phase=3, connection_type="wye"):
+connection_type = ""
+passes_actual = 0
+coils_qty = 0
+
+def calculate_coil_options(voltage, power_kw, unit_size, passes_num, phase=3, connection_type="wye"):
     pitch_min = 0.16
     pitch_max = 0.24
 
@@ -25,7 +29,7 @@ def calculate_coil_options(voltage, power_kw, unit_size, num_passes, phase=3, co
     unit_width, unit_height = unit_sizes[unit_size]
     B3 = unit_width
     B8 = 0.25
-    B5 = unit_height / num_passes
+    B5 = unit_height / passes_num
 
     # Determine resistance (ohms) based on connection type
     if connection_type.lower() == "delta" and phase == 3:
@@ -34,59 +38,59 @@ def calculate_coil_options(voltage, power_kw, unit_size, num_passes, phase=3, co
         resistance = (voltage ** 2) / (power_kw * 1000)
 
     # Line current (for reference)
-    line_current = round((power_kw * 1000) / (voltage * math.sqrt(3 if phase == 3 else 1)), 2)
+    current_line_calc = round((power_kw * 1000) / (voltage * math.sqrt(3 if phase == 3 else 1)), 2)
 
     results = []
     for row in awg_data:
-        gauge = row["Gauge"]
-        diameter = row["Diameter"]
-        resistance_per_ft = row["Resistance"]
+        gauge_nichrome = row["Gauge"]
+        diameter_nichrome = row["Diameter"]
+        resistance_ft = row["Resistance"]
 
         # Step 1: Unwound length (in inches)
-        unwound_length = (resistance / resistance_per_ft) * 12
+        length_he_in = (resistance / resistance_ft) * 12
 
         # Step 2: Wound length (unstretched)
-        unstretch_wound = unwound_length * diameter / math.sqrt((math.pi * B8)**2 + diameter**2)
+        length_he_in_unstretched = length_he_in * diameter_nichrome / math.sqrt((math.pi * B8)**2 + diameter_nichrome**2)
 
         # Step 3: Geometry-based pitch
-        B6 = (B3 - 2) * num_passes + math.pi * B5 * (num_passes - 1)
+        B6 = (B3 - 2) * passes_num + math.pi * B5 * (passes_num - 1)
         try:
-            denominator = (unwound_length ** 2) / (B6 ** 2) - 1
+            denominator = (length_he_in ** 2) / (B6 ** 2) - 1
             if denominator <= 0:
                 continue
-            actual_pitch = math.sqrt(((math.pi * B8) ** 2) / denominator)
-            rounded_pitch = round(actual_pitch, 2)
+            pitch_actual = math.sqrt(((math.pi * B8) ** 2) / denominator)
+            pitch_rounded = round(pitch_actual, 2)
         except (ZeroDivisionError, ValueError):
             continue
 
-        if not (pitch_min <= rounded_pitch <= pitch_max):
+        if not (pitch_min <= pitch_rounded <= pitch_max):
             continue
 
         # Step 4: Use rounded pitch to recalculate stretched length
-        stretched_length = (unwound_length * rounded_pitch) / math.sqrt((math.pi * B8) ** 2 + rounded_pitch ** 2)
+        length_he_in_stretched = (length_he_in * pitch_rounded) / math.sqrt((math.pi * B8) ** 2 + pitch_rounded ** 2)
 
         # Step 5: Passes and coil details
-        passes_possible = (stretched_length + math.pi * B5) / (B3 - 2 + math.pi * B5)
-        actual_passes = math.floor(passes_possible)
-        number_of_coils = phase  # Default to 1 unless split needed
-        total_ft_per_unit = (unwound_length / 12) * number_of_coils 
+        passes_possible = (length_he_in_stretched + math.pi * B5) / (B3 - 2 + math.pi * B5)
+        passes_actual = math.floor(passes_possible)
+        coils_qty = phase  # Default to 1 unless split needed
+        length_he_ft = (length_he_in / 12) * coils_qty 
 
         # Append result in correct order
         results.append({
-            "Gauge": gauge,  # Optional backward compatibility
-            "Actual Passes": actual_passes,  # Optional backward compatibility
-            "Actual Pitch": rounded_pitch,  # Optional backward compatibility
+            "Gauge": gauge_nichrome,  # Optional backward compatibility
+            "Actual Passes": passes_actual,  # Optional backward compatibility
+            "Actual Pitch": pitch_rounded,  # Optional backward compatibility
             "Connection Type": connection_type.capitalize(),
             "Resistance (ohm)": round(resistance, 4),
-            "Line Current": line_current,
-            "Nichrome Wire Size (AWG)": gauge,
-            "Number of Coils": number_of_coils,
-            "Passes": actual_passes,
-            "Pitch": rounded_pitch,
-            "Heat Element Length (in) per coil": round(unwound_length, 2),
-            "Unstretch Wounded Length (in)": round(unstretch_wound, 2),
-            "Stretched Wound Coil Length (in)": round(stretched_length, 2),
-            "Heat Element Length (ft) per unit": round(total_ft_per_unit, 2)
+            "Line Current": current_line_calc,
+            "Nichrome Wire Size (AWG)": gauge_nichrome,
+            "Number of Coils": coils_qty,
+            "Passes": passes_actual,
+            "Pitch": pitch_rounded,
+            "Heat Element Length (in) per coil": round(length_he_in, 2),
+            "Unstretch Wounded Length (in)": round(length_he_in_unstretched, 2),
+            "Stretched Wound Coil Length (in)": round(length_he_in_stretched, 2),
+            "Heat Element Length (ft) per unit": round(length_he_ft, 2)
         })
 
     return results

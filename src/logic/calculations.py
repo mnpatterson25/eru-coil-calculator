@@ -1,121 +1,141 @@
-# calculations.py
-
 import math
-import pandas as pd
-from logic.model_mappings import (
-    get_transformer_wire,
-    get_fuse_block_model,
-    get_contactor_model,
-    get_disconnect_model,
-    get_scr_model
-)
-from logic.constants import FUSE_SIZES, AMPACITY, CONTACTOR_SIZES, SCR_SIZE_RATINGS
+from logic.constants import *
+#FUSE_SIZES, AMPACITY, CONTACTOR_SIZES, SCR_SIZE_RATINGS, DISCONNECT_SIZES, FB_SIZES
+from logic.coil_calculator import connection_type, passes_actual
 
-def apply_default_unit_fields(unit):
-    unit.update({
-        "Line Wire Color": "",
-        "Line Wire Length (ft)": "",
-        "Control Wire Size (AWG)": "18",
-        "Control Wire Color": "",
-        "Control Wire Length (ft)": "",
-        "Control Wire Color2": "",
-        "Control Wire Length2 (ft)": "",
-    })
-        
+
+##############################################################################
+############################# AMPERAGE FUNCTIONS #############################
+##############################################################################
 def get_contactor_amp(required_current):
     return next((size for size in CONTACTOR_SIZES if size >= required_current), "x")
-
+##############################################################################
 def get_scr_amp(required_current):
     for min_rating, scr_size in SCR_SIZE_RATINGS.items():
         if min_rating >= required_current:
             return scr_size
     return "x"
+##############################################################################
+def min_ge(values, target):
+    return next((v for v in values if v >= target), "N/A")
+
+from logic.components import *
+
+line_no = 0
 
 def process_unit_data(units):
     result = []
 
     for unit in units:
-        voltage = unit["Voltage"]
-        kw = unit["kW"]
-        voltage_val = int(voltage.split("/")[0]) if isinstance(voltage, str) else int(voltage)
+        ### GET DATA ###
+        line_no = unit["Line"]
+        tag_no = unit["Tag #"]
+        unit_size = unit["Size"]
+        material = unit["Material"]
+        handing = unit["Coil Handing"]
+        dc_type = unit["Disconnect"]
+        tran_VA = unit["Transformer Voltage"]
+        voltage_ph = unit["Voltage/Phase"]
+        power_kw = unit["kW"]
+        voltage = int(voltage_ph.split("/")[0]) if isinstance(voltage_ph, str) else int(voltage_ph)
         phase = int(unit.get("Phase", 3))
+        
 
-        base_current = (kw * 1000) / (voltage_val * math.sqrt(3 if phase == 3 else 1))
-        line_current = math.ceil(base_current)
-        add_current = line_current + 0.5
-        current_125 = math.ceil(add_current * 1.25)
+        ### CALCULATIONS ###
+        current_base = (power_kw * 1000) / (voltage * math.sqrt(3 if phase == 3 else 1))
+        current_lw = math.ceil(current_base)
+        current_add_half = current_lw + 0.5
+        current_125 = math.ceil(current_add_half * 1.25)
         breaker = next((b for b in FUSE_SIZES if b >= current_125), "N/A")
+        gauge_lw = next((lwgauge for lwgauge, ampac in AMPACITY.items() if ampac >= breaker), "N/A")
+        ampacity = AMPACITY.get(gauge_lw, "N/A")
+        #try:
+        #    gauge_lw_calc = next((g for g, a in AMPACITY.items() if a >= breaker))
+        #    ampacity = AMPACITY[gauge_lw_calc]
+        #except StopIteration:
+        #    gauge_lw_calc, ampacity = "N/A"        
+        #try:
+        #    gauge_lw_val = int(gauge_lw_calc)
+        #    gauge_lw = (
+        #        "14" if gauge_lw_val >= 14 else
+        #        "12" if gauge_lw_val == 12 else
+        #        "8" if gauge_lw_val in (10, 8) else
+        #        "ERROR"
+        #    )
+        #except:
+        #    gauge_lw = "ERROR"
 
-        try:
-            wire = next((g for g, a in AMPACITY.items() if a >= breaker))
-            amp = AMPACITY[wire]
-        except StopIteration:
-            wire = "N/A"
-            amp = "N/A"
-
-        try:
-            wire_val = int(wire)
-            if wire_val >= 14:
-                lw_size = "14"
-            elif wire_val == 12:
-                lw_size = "12"
-            elif wire_val == 10 or wire_val == 8:
-                lw_size = "8"
-            else:
-                lw_size = "ERROR"
-        except:
-            lw_size = "ERROR"
-
-        unit.update({
-            "Phase": phase,
-            "Line Current (Amps)": line_current,
-            "Addl. 0.5 Amp": add_current,
-            "125% Current": current_125,
-            "Wire Gauge": wire,
-            "Ampacity": amp,
-            "Breaker": breaker,
-            "Line Wire Size (AWG)": lw_size,
-            #"Line Wire Color": "",
-            #"Line Wire Length (ft)": "",
-            #"CW_Size (AWG)": "18",
-            #"CW_Color": "",
-            #"CW_Length (ft)": "",
-            #"CW_Color2": "",
-            #"CW_Length (ft) 2": "",
-            "Disconnect Type": unit.get("Disconnect", "STD"),
-            "Dip Switch": "3,5,6",
-        })
-
-        unit["FB_Amp"] = 30 if breaker <= 30 else 60 if breaker <= 60 else "x"
-        unit["F_Amps"] = breaker
-        unit["F_Per Unit"] = phase
-        unit["C_Amps"] = get_contactor_amp(current_125)
-        unit["Disconnect Amps"] = get_contactor_amp(current_125)
-        unit["SCR_Amps"] = get_scr_amp(current_125)
+        #unit.update(updated_fields)
+        ### SINGLE VALUE UPDATES ###
+        fb_amps = next((size for size in FB_SIZES if size >= breaker), "N/A")
+        f_amps = breaker
+        f_unit = phase
+        c_amps = next((size for size in CONTACTOR_SIZES if size >= current_125), "N/A")
+        dc_amps = next((size for size in DISCONNECT_SIZES if size >= current_125), "N/A")
+        scr_amps = next((size for size in SCR_SIZE_RATINGS if size >= current_125), "N/A")
         unit["T_VA"] = "50" if str(unit.get("Transformer Voltage", "")).startswith("24V,50VA") else "x"
-
         result.append(unit)
 
+        ### FIELD UPDATES ###
+        #updated_fields = UNIT_FIELD_TEMPLATE.copy()
+        unit.update({
+            # BASIC TAB
+            "Line": line_no,
+            "Tag #": tag_no,
+            "Size": unit_size,
+            "Disconnect": dc_type,
+            "Coil Handing": handing,
+            "kW": power_kw,
+            "Voltage": voltage,
+            "Phase": phase,
+            # WIRE SIZE CALC TAB
+            "Line Current (Amps)": current_lw,
+            "Addl. 0.5 Amp": current_add_half,
+            "125% Current": current_125,
+            "Breaker": breaker,
+            "Ampacity": ampacity,
+            "Line Wire Size (AWG)": gauge_lw,
+            # LINE WIRE DETAIL TAB
+            "Line Wire Color": color_lw,
+            "Line Wire Length (ft)": length_lw,
+            # CONTROL WIRE DETAIL TAB
+            "Control Wire Size (AWG)": gauge_cw,
+            "Control Wire Color": color_cw1,
+            "Control Wire Length 1 (ft)": length_cw1,
+            "Control Wire Color 2": color_cw2,
+            "Control Wire Length 2 (ft)": length_cw2,
+            # CERAMICS TAB
+            "Unit": line_no,
+            "Passes": passes_actual,
+            "Coils": coils_qty,
+            "Ceramics": ceramics,
+            "Coil End Post": ceramics_posts,
+            "Ceramic Plug/Cap Sets": ceramics_caps,
+            # ELECRICAL INFO TAB
+            "Fuse Block Amps": min_ge(FB_SIZES, breaker),
+            "Fuse Blocks/Unit": fb_unit,
+            "Fuse Amps": min_ge(FUSE_SIZES, breaker),
+            "Fuses/Unit": phase,
+            "Contactor Amps": min_ge(CONTACTOR_SIZES, current_125),
+            "Contactors/Unit": c_unit,
+            "Disconnect Amps": min_ge(DISCONNECT_SIZES, current_125),
+            "Disconnect/Unit": dc_unit,
+            "SCR Amps": min_ge(SCR_SIZE_RATINGS, current_125),
+            "SCRs/Unit": scr_unit,
+            #"Transformer VA": "'50' if '24V,50VA' in transformer_info else 'x'",
+            "Transformers/Unit": tran_unit,
+            "Pressure Switch": p_switch,
+            "Manual Reset": man_reset,
+            "Auto Reset": auto_reset,
+            "Ground Lug": ground_lug,
+            # CONTROL PANEL INFO TAB
+            "Connection Type": connection_type,
+            #"Dip Switch": "3,5,6",
+            #"Transformer Wire Used": ,
+            #"Fuse Block Model": ,
+            #"Contactor Model": ,
+            #"Disconnect Model": ,
+            #"SCR Model"
+        })
+
     return result
-
-def enrich_control_panel_info(data):
-    df = pd.DataFrame(data)
-
-    df["FB_Per unit"] = 1
-    df["C_Per unit"] = 1
-    df["SCR_Per unit"] = 1
-    df["T_Per unit"] = 1
-    df["Pressure switch"] = 1
-    df["Man Reset"] = 1
-    df["Auto Reset"] = 1
-    df["Ground lug"] = 1
-
-    df["Transformer Wire Used"] = df["Voltage"].apply(lambda v: get_transformer_wire(v))
-    df["Fuse Block Model"] = df.apply(lambda x: get_fuse_block_model(x.get("F_Per Unit", 3), x.get("FB_Amp", 0)), axis=1)
-    df["Contactor Model"] = df["C_Amps"].apply(get_contactor_model)
-    df["Disconnect Model"] = df.apply(lambda x: get_disconnect_model(x.get("Disconnect Type", "STD"), x.get("Disconnect Amps", 0)), axis=1)
-    df["SCR Model"] = df["SCR_Amps"].apply(get_scr_model)
-
-    return df.to_dict(orient="records")
-
-

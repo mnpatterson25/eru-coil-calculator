@@ -7,19 +7,19 @@ from logic.coil_calculator import calculate_coil_options
 from gui.coil_popup import show_all_coil_selections_popup
 from gui.results_display import show_results
 import logic.shared_state
+from logic.components import *
 
 columns = [
     "Line", "Tag #", "Size", "Material", "Coil Handing",
-    "Disconnect", "Transformer Voltage", "Voltage", "kW"
+    "Disconnect", "Transformer Voltage", "Voltage/Phase", "kW"
 ]
-
 dropdown_options = {
     "Size": ["10x15", "10x21", "16x30"],
     "Material": ["Galvanized"],
     "Coil Handing": ["Left", "Right"],
-    "Transformer Voltage": ["a", "b", "c"],
-    "Voltage": ["480/3", "120/1"],
-    "Disconnect": ["STD", "KE"]
+   "Transformer Voltage": ["a", "b", "c"],
+   "Voltage/Phase": ["480/3", "120/1"],
+   "Disconnect": ["STD", "KE"]
 }
 
 unit_rows = []
@@ -110,14 +110,14 @@ def submit_all():
         unit = {field: row[field].get() for field in columns}
 
         try:
-            unit["Voltage"] = int(unit["Voltage"].split("/")[0])
+            unit["Voltage/Phase"] = int(unit["Voltage/Phase"].split("/")[0])
             unit["kW"] = float(unit["kW"])
             unit_size = unit["Size"]
             passes_to_try = [6, 8] if unit_size == "16x30" else [6, 8, 12, 16]
 
             options = []
             for passes in passes_to_try:
-                options += calculate_coil_options(unit["Voltage"], unit["kW"], unit_size, passes)
+                options += calculate_coil_options(unit["Voltage/Phase"], unit["kW"], unit_size, passes)
 
             coil_options_by_line[idx] = options
             unit["Coil Options"] = options

@@ -1,3 +1,7 @@
+FB_SIZES = [30, 60]
+CONTACTOR_SIZES = [25, 40, 1000]
+DISCONNECT_SIZES = [25, 40, 1000]
+
 FUSE_SIZES = [
     1, 2, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50,
     60, 70, 80, 90, 100, 110, 125, 150, 175, 200,
@@ -16,11 +20,13 @@ AMPACITY = {
     "3": 110
 }
 
-CONTACTOR_SIZES = [25, 40, 1000]
-
 SCR_SIZE_RATINGS = {
     20: 25,   # 25A SCR has 80% rating of 20A
     32: 40,   # 40A SCR → 32A
     40: 50,   # 50A SCR → 40A
     56: 70    # 70A SCR → 56A
 }
+
+
+
+

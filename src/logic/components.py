@@ -1,6 +1,24 @@
 # components.py
 
-# --- Line Wire Data ---
+
+
+
+##############################################################################
+################################# TAB LISTS ##################################
+##############################################################################
+# Values in calculations.py
+
+BASIC_UNIT_INFO = [
+    "Line",
+    "Tag #",
+    "Size",
+    "Disconnect",
+    "Coil Handing",
+    "kW",
+    "Voltage",
+    "Phase"
+]
+
 LINE_WIRE_CALCULATIONS = [
     "Line Current (Amps)",
     "Addl. 0.5 Amp",
@@ -10,60 +28,52 @@ LINE_WIRE_CALCULATIONS = [
     "Line Wire Size (AWG)"
 ]
 
-# --- Line Wire Fields ---
 LINE_WIRE_FIELDS = [
     "Line Wire Size (AWG)",
     "Line Wire Color",
     "Line Wire Length (ft)"
 ]
 
-# --- Control Wire Fields ---
 CONTROL_WIRE_FIELDS = [
     "Control Wire Size (AWG)",
     "Control Wire Color",
-    "Control Wire Length (ft)",
-    "Control Wire Color2",
-    "Control Wire Length2 (ft)",
+    "Control Wire Length 1 (ft)",
+    "Control Wire Color 2",
+    "Control Wire Length 2 (ft)",
 ]
 
-# --- Ceramic Info ---
 CERAMIC_INFO = [
     "Unit",
     "Passes",
     "Coils",
     "Ceramics",
-    "Line",
-    "Ceramics",
     "Coil End Post",
     "Ceramic Plug/Cap Sets",
-    "Passes",
-    "Number of Coils"
 ]
 
-# --- Electrical Info ---
-ELECTRICAL_COMPONENTS = {
-    "Fuse Block Amps": "min_ge(FUSE_BLOCK_SIZES, breaker)",
-    "Fuse Blocks/Unit": "1",
-    "Fuse Amps": "breaker",
-    "Fuses/Unit": "phase",
-    "Contactor Amps": "min_ge(CONTACTOR_SIZES, current_125)",
-    "Contactors/Unit": "1",
-    "SCR Amps": "min_ge(SCR_SIZES, current_125)",
-    "SCRs/Unit": "1",
-    "Transformer VA": "'50' if '24V,50VA' in transformer_info else 'x'",
-    "Transformers/Unit": "1",
-    "Pressure Switch": "1",
-    "Manual Reset": "1",
-    "Auto Reset": "1",
-    "Ground Lug": "1"
-}
+ELECTRICAL_COMPONENTS = [
+    "Fuse Block Amps",
+    "Fuse Blocks/Unit",
+    "Fuse Amps",
+    "Fuses/Unit",
+    "Contactor Amps",
+    "Contactors/Unit",
+    "SCR Amps",
+    "SCRs/Unit",
+    "Transformer VA",
+    "Transformers/Unit",
+    "Pressure Switch",
+    "Manual Reset",
+    "Auto Reset",
+    "Ground Lug",
+]
 
-# --- Control Panel Info ---
 CONTROL_PANEL_INFO = [
     "Size",
     "Disconnect",
     "Coil Handing",
     "Voltage",
+    "Phase",
     "Connection Type",
     "Passes",
     "Line Wire Size (AWG)",   
@@ -102,17 +112,6 @@ COIL_SELECTION_INFO = [
 
 
 
-# --- Basic Unit Info ---
-BASIC_UNIT_INFO = [
-    "Line",
-    "Tag #",
-    "Size",
-    "Disconnect",
-    "Coil Handing",
-    "kW",
-    "Voltage",
-    "Phase"
-]
 
 
 
@@ -155,6 +154,50 @@ coil_columns = [
     "Heat Element Length (ft) per unit"
 ]
 
+##############################################################################
+##############NEW STUFF#######################################################
+##############################################################################
+import math
+from logic.constants import FUSE_SIZES, AMPACITY, FB_SIZES, SCR_SIZE_RATINGS, CONTACTOR_SIZES, DISCONNECT_SIZES
+from logic.coil_calculator import connection_type, passes_actual, coils_qty
+from gui.tab_ceramics import ceramics
+#from logic.calculations import power_kw, voltage, phase
 
 
 
+
+##############################################################################
+##############################################################################
+##############################################################################
+
+
+
+##############################################################################
+gauge_cw = 18
+color_lw = "XX"
+color_cw1 = "XX"
+color_cw2 = "XX"
+length_lw = "XX"
+length_cw1 = "XX"
+length_cw2 = "XX"
+##############################################################################
+passes_actual = passes_actual
+coils_qty = coils_qty
+ceramics = ceramics
+ceramics_posts = coils_qty * 2
+ceramics_caps = coils_qty * 2
+##############################################################################
+fb_unit = 1
+c_unit = 1
+dc_unit = 1
+scr_unit = 1
+tran_unit = 1
+p_switch = 1
+man_reset = 1
+auto_reset = 1
+ground_lug = 1
+##############################################################################
+connection_type = connection_type.capitalize()
+##############################################################################
+
+#dip_switch =
