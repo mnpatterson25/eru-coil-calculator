@@ -72,7 +72,7 @@ def calculate_coil_options(voltage, power_kw, unit_size, passes_num, phase=3, co
         # Step 5: Passes and coil details
         passes_possible = (length_he_in_stretched + math.pi * B5) / (B3 - 2 + math.pi * B5)
         passes_actual = math.floor(passes_possible)
-        coils_qty = phase  # Default to 1 unless split needed
+        coils_qty = phase if phase == 3 else 1
         length_he_ft = (length_he_in / 12) * coils_qty 
         ceramics = passes_actual * 2 * coils_qty
         ceramics_posts = 2 * coils_qty

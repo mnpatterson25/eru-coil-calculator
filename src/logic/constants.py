@@ -26,7 +26,3 @@ SCR_SIZE_RATINGS = {
     40: 50,   # 50A SCR → 40A
     56: 70    # 70A SCR → 56A
 }
-
-
-
-

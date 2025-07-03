@@ -15,6 +15,16 @@ def get_transformer_wire(voltage):
         208: "RED"
     }.get(v, "NO COLOR")
 ##############################################################################
+def get_dip_switch(phase):
+    if phase == 3:
+        return "3,5,6"
+    return "3,5"
+##############################################################################
+def get_conn_type(connection_type):
+    if connection_type == "Wye":
+        return "WYE"
+    return "DELTA"
+##############################################################################
 def get_fb_model(f_unit, fb_amp):
     if f_unit == 3:
         return {30: "60308T", 60: "60608T"}.get(fb_amp, "x")

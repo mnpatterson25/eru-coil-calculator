@@ -21,6 +21,7 @@ def min_ge(values, target):
 
 from logic.components import *
 from logic.coil_calculator import calculate_coil_options
+from logic.model_mappings import *
 
 line_no = 0
 
@@ -77,11 +78,9 @@ def process_unit_data(units):
         dc_amps = next((size for size in DISCONNECT_SIZES if size >= current_125), "N/A")
         scr_amps = next((size for size in SCR_SIZE_RATINGS if size >= current_125), "N/A")
         unit["T_VA"] = "50" if str(unit.get("Transformer Voltage", "")).startswith("24V,50VA") else "x"
-        #ceramics = passes_actual * 2 * coils_qty
         result.append(unit)
 
         ### FIELD UPDATES ###
-        #updated_fields = UNIT_FIELD_TEMPLATE.copy()
         unit.update({
             # BASIC TAB
             "Line": line_no,
@@ -133,13 +132,13 @@ def process_unit_data(units):
             "Auto Reset": auto_reset,
             "Ground Lug": ground_lug,
             # CONTROL PANEL INFO TAB
-            #"Connection Type": connection_type,
-            #"Dip Switch": "3,5,6",
-            #"Transformer Wire Used": ,
-            #"Fuse Block Model": ,
-            #"Contactor Model": ,
-            #"Disconnect Model": ,
-            #"SCR Model"
+            #"Connection Type": get_conn_type(connection_type),
+            "Dip Switch": get_dip_switch(phase),
+            "Transformer Wire Used": get_transformer_wire(voltage),
+            "Fuse Block Model": get_fb_model(f_unit, fb_amps),
+            "Contactor Model": get_c_model(c_amps),
+            "Disconnect Model": get_dc_model(dc_type, dc_amps),
+            "SCR Model": get_scr_model(scr_amps)
         })
 
     return result

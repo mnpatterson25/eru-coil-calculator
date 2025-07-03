@@ -8,10 +8,3 @@ def create_control_wire_tab(notebook, data):
     frame = ttk.Frame(notebook)
     notebook.add(frame, text="Control Wire Detail")
     create_table(frame, CONTROL_WIRE_FIELDS, data)
-
-
-
-
-
-
-    

@@ -11,5 +11,9 @@ def add_ceramics_tab(notebook, data):
     create_table(ceramic_frame, CERAMIC_INFO, data)
 
 
-
-
+#from logic.calculations import passes_actual
+#from logic.coil_calculator import coils_qty, passes_actual
+#ceramics = 0
+#def add_ceramics_tab(notebook, data, coil_data):
+#for idx, coil in enumerate(coil_data):
+#ceramics = passes_actual * 2 * coils_qty
