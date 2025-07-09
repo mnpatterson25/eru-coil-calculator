@@ -114,7 +114,7 @@ def process_unit_data(units):
             #"Ceramics": ceramics,
             #"Coil End Post": ceramics_posts,
             #"Ceramic Plug/Cap Sets": ceramics_caps,
-            # ELECRICAL INFO TAB
+            # ELECTRICAL INFO TAB
             "Fuse Block Amps": min_ge(FB_SIZES, breaker),
             "Fuse Blocks/Unit": fb_unit,
             "Fuse Amps": min_ge(FUSE_SIZES, breaker),

@@ -1,5 +1,3 @@
-# tab_coil.py
-
 from tkinter import ttk
 from gui.coil_popup import show_coil_selection_popup
 

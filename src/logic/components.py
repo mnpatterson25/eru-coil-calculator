@@ -68,6 +68,23 @@ CONTROL_PANEL_INFO = [
     "SCR Model"
 ]
 
+ELECTRICAL_COMPONENTS = [
+    "Fuse Block Amps",
+    "Fuse Blocks/Unit",
+    "Fuse Amps",
+    "Fuses/Unit",
+    "Contactor Amps",
+    "Contactors/Unit",
+    "SCR Amps",
+    "SCRs/Unit",
+    "Transformer VA",
+    "Transformers/Unit",
+    "Pressure Switch",
+    "Manual Reset",
+    "Auto Reset",
+    "Ground Lug"
+]
+
 ##############################################################################
 ################################## NEW ITEMS #################################
 ##############################################################################
@@ -104,23 +121,3 @@ ground_lug = 1
 #ceramics_caps = coils_qty * 2
 ##############################################################################
 #connection_type = connection_type.capitalize()
-
-##############################################################################
-################################ FIND USAGE ##################################
-##############################################################################
-#ELECTRICAL_COMPONENTS = [
-#    "Fuse Block Amps",
-#    "Fuse Blocks/Unit",
-#    "Fuse Amps",
-#    "Fuses/Unit",
-#    "Contactor Amps",
-#    "Contactors/Unit",
-#    "SCR Amps",
-#    "SCRs/Unit",
-#    "Transformer VA",
-#    "Transformers/Unit",
-#    "Pressure Switch",
-#    "Manual Reset",
-#    "Auto Reset",
-#    "Ground Lug",
-#]
