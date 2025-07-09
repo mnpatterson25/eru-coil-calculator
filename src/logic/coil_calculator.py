@@ -1,32 +1,14 @@
 import math
-
-awg_data = [
-    {"Gauge": 16, "Diameter": 0.0508, "Resistance": 0.2517},
-    {"Gauge": 18, "Diameter": 0.0403, "Resistance": 0.4002},
-    {"Gauge": 20, "Diameter": 0.0320, "Resistance": 0.6363},
-    {"Gauge": 22, "Diameter": 0.0253, "Resistance": 1.0118},
-    {"Gauge": 24, "Diameter": 0.0201, "Resistance": 1.6088},
-    {"Gauge": 26, "Diameter": 0.0159, "Resistance": 2.5581},
-]
-
-unit_sizes = {
-    "10x15": (15, 10),
-    "10x21": (21, 10),
-    "16x30": (30, 16)
-}
-
-#connection_type = ""
-#passes_actual = 0
-#coils_qty = 0
+from logic.constants import AWG_DATA, UNIT_SIZES
 
 def calculate_coil_options(voltage, power_kw, unit_size, passes_num, phase=3, connection_type="wye"):
     pitch_min = 0.16
     pitch_max = 0.24
 
-    if unit_size not in unit_sizes:
+    if unit_size not in UNIT_SIZES:
         return []
 
-    unit_width, unit_height = unit_sizes[unit_size]
+    unit_width, unit_height = UNIT_SIZES[unit_size]
     B3 = unit_width
     B8 = 0.25
     B5 = unit_height / passes_num
@@ -41,7 +23,7 @@ def calculate_coil_options(voltage, power_kw, unit_size, passes_num, phase=3, co
     current_line_calc = round((power_kw * 1000) / (voltage * math.sqrt(3 if phase == 3 else 1)), 2)
 
     results = []
-    for row in awg_data:
+    for row in AWG_DATA:
         gauge_nichrome = row["Gauge"]
         diameter_nichrome = row["Diameter"]
         resistance_ft = row["Resistance"]

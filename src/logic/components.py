@@ -1,12 +1,6 @@
-# components.py
-
-
-
-
 ##############################################################################
 ################################# TAB LISTS ##################################
 ##############################################################################
-# Values in calculations.py
 
 BASIC_UNIT_INFO = [
     "Line",
@@ -51,23 +45,6 @@ CERAMIC_INFO = [
     "Ceramic Plug/Cap Sets",
 ]
 
-ELECTRICAL_COMPONENTS = [
-    "Fuse Block Amps",
-    "Fuse Blocks/Unit",
-    "Fuse Amps",
-    "Fuses/Unit",
-    "Contactor Amps",
-    "Contactors/Unit",
-    "SCR Amps",
-    "SCRs/Unit",
-    "Transformer VA",
-    "Transformers/Unit",
-    "Pressure Switch",
-    "Manual Reset",
-    "Auto Reset",
-    "Ground Lug",
-]
-
 CONTROL_PANEL_INFO = [
     "Size",
     "Disconnect",
@@ -92,7 +69,7 @@ CONTROL_PANEL_INFO = [
 ]
 
 ##############################################################################
-##############NEW STUFF#######################################################
+################################## NEW ITEMS #################################
 ##############################################################################
 gauge_cw = 18
 color_lw = "XX"
@@ -127,3 +104,23 @@ ground_lug = 1
 #ceramics_caps = coils_qty * 2
 ##############################################################################
 #connection_type = connection_type.capitalize()
+
+##############################################################################
+################################ FIND USAGE ##################################
+##############################################################################
+#ELECTRICAL_COMPONENTS = [
+#    "Fuse Block Amps",
+#    "Fuse Blocks/Unit",
+#    "Fuse Amps",
+#    "Fuses/Unit",
+#    "Contactor Amps",
+#    "Contactors/Unit",
+#    "SCR Amps",
+#    "SCRs/Unit",
+#    "Transformer VA",
+#    "Transformers/Unit",
+#    "Pressure Switch",
+#    "Manual Reset",
+#    "Auto Reset",
+#    "Ground Lug",
+#]

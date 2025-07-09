@@ -6,7 +6,7 @@ from logic.calculations import process_unit_data
 from logic.coil_calculator import calculate_coil_options
 from gui.coil_popup import show_all_coil_selections_popup
 from gui.results_display import show_results
-import logic.shared_state
+#import logic.shared_state
 from logic.components import *
 
 columns = [
@@ -26,12 +26,13 @@ unit_rows = []
 input_frame = None
 
 
-def build_input_form(root):
+def build_input_form(root, context):
     global input_frame, table_frame
 
     input_frame = ttk.Frame(root)
     input_frame.pack(fill="both", expand=True)
-    logic.shared_state.input_frame = input_frame
+    #logic.shared_state.input_frame = input_frame
+    context.input_frame = input_frame
 
     canvas = tk.Canvas(input_frame)
     scrollbar = ttk.Scrollbar(input_frame, orient="vertical", command=canvas.yview)
@@ -57,7 +58,8 @@ def build_input_form(root):
     button_frame.pack(pady=10)
 
     ttk.Button(button_frame, text="Add Unit", command=add_unit_row).pack(side="left", padx=10)
-    ttk.Button(button_frame, text="Submit All", command=submit_all).pack(side="left", padx=10)
+    ttk.Button(button_frame, text="Submit All", command=lambda: submit_all(context)).pack(side="left", padx=10)
+
 
     add_unit_row()
 
@@ -102,7 +104,7 @@ def rebuild_table():
         row["_widgets"][1].grid(row=i, column=len(columns))
 
 
-def submit_all():
+def submit_all(context):
     unit_data = []
     coil_options_by_line = {}
 
@@ -132,8 +134,17 @@ def submit_all():
         for idx, selected in selected_options.items():
             unit_data[idx]["Selected Coil"] = selected
 
-        logic.shared_state.processed_data = process_unit_data(unit_data)
+        context.processed_data = process_unit_data(unit_data)
         all_selected = [unit.get("Selected Coil") for unit in unit_data]
-        show_results(logic.shared_state.processed_data, logic.shared_state.input_frame, coil_data=all_selected)
+        context.coil_data = all_selected
+        show_results(context.processed_data, context.input_frame, coil_data=all_selected)
+        #show_results(logic.shared_state.processed_data, logic.shared_state.input_frame, coil_data=all_selected)
 
-    show_all_coil_selections_popup(input_frame, unit_data, coil_options_by_line, on_all_selected_coils)
+    show_all_coil_selections_popup(context.input_frame, unit_data, coil_options_by_line, on_all_selected_coils)
+
+
+class AppContext:
+    def __init__(self):
+        self.input_frame = None
+        self.processed_data = None
+        self.coil_data = None

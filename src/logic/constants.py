@@ -26,3 +26,18 @@ SCR_SIZE_RATINGS = {
     40: 50,   # 50A SCR → 40A
     56: 70    # 70A SCR → 56A
 }
+
+AWG_DATA = [
+    {"Gauge": 16, "Diameter": 0.0508, "Resistance": 0.2517},
+    {"Gauge": 18, "Diameter": 0.0403, "Resistance": 0.4002},
+    {"Gauge": 20, "Diameter": 0.0320, "Resistance": 0.6363},
+    {"Gauge": 22, "Diameter": 0.0253, "Resistance": 1.0118},
+    {"Gauge": 24, "Diameter": 0.0201, "Resistance": 1.6088},
+    {"Gauge": 26, "Diameter": 0.0159, "Resistance": 2.5581},
+]
+
+UNIT_SIZES = {
+    "10x15": (15, 10),
+    "10x21": (21, 10),
+    "16x30": (30, 16)
+}
